@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QMove - Home</title>
+    <div th:replace="fragments/header :: header"></div>
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>    <div class="container">
+        <div class="card welcome-section">
+            <div th:if="${currentUserName}">
+                <h2><i class="fas fa-user-circle"></i> Olá, <span th:text="${currentUserName}">Usuário</span>!</h2>
+                <p style="margin-top:6px; color:#555;">Você está logado como
+                    <span th:each="r : ${currentUserRoles}" th:text="${r}" style="font-weight:700; margin-left:6px;">ROLE</span>
+                </p>
+            </div>
+            <div th:unless="${currentUserName}">
+                <h2><i class="fas fa-rocket"></i> Bem-vindo(a) ao Sistema QMove Web</h2>
+            </div>
+            <p>Use o menu acima para navegar entre os módulos do sistema.</p>
+            <p style="margin-top: 20px;">Gerencie setores e funcionários de forma eficiente e moderna!</p>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

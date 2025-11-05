@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Funcionários - QMove</title>
+    <div th:replace="fragments/header :: header"></div>
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-users"></i> Gerenciamento de Funcionários</h2>
+            <div style="margin: 20px 0;">
+                <a th:href="@{/funcionarios/novo}" class="btn"><i class="fas fa-user-plus"></i> Novo Funcionário</a>
+            </div><table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th style="text-align: center;">Permissões</th>
+                        <th style="text-align: center;">Ativo</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="f : ${funcionarios}">
+                        <td th:text="${f.id}"></td>
+                        <td th:text="${f.nome}"></td>
+                        <td th:text="${f.email}"></td>
+                        <td style="text-align: center;">                            <span th:if="${#lists.isEmpty(f.roles)}" style="color: #999;">Sem permissões</span>
+                            <span th:unless="${#lists.isEmpty(f.roles)}">
+                                <span th:each="role, iterStat : ${f.roles}">
+                                    <span th:if="${role.nome == 'ROLE_ADMIN'}" 
+                                          style="background: #dc3545; color: white; padding: 3px 8px; border-radius: 5px; font-size: 12px; margin: 2px;">
+                                        <i class="fas fa-crown"></i> ADMIN
+                                    </span>
+                                    <span th:if="${role.nome == 'ROLE_USER'}" 
+                                          style="background: #52764B; color: white; padding: 3px 8px; border-radius: 5px; font-size: 12px; margin: 2px;">
+                                        <i class="fas fa-user"></i> USER
+                                    </span>
+                                </span>
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span th:if="${f.ativo}" style="color: #52764B; font-weight: bold;"><i class="fas fa-check-circle"></i> Sim</span>
+                            <span th:unless="${f.ativo}" style="color: #dc3545; font-weight: bold;"><i class="fas fa-times-circle"></i> Não</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <a th:href="@{|/funcionarios/editar/${f.id}|}" class="btn btn-sm"><i class="fas fa-edit"></i> Editar</a>
+                            <a th:href="@{|/funcionarios/excluir/${f.id}|}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('Tem certeza que deseja excluir este funcionário?')"><i class="fas fa-trash"></i> Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

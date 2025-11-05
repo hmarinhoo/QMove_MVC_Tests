@@ -1,0 +1,14 @@
+<nav th:fragment="menu" class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <i class="fas fa-motorcycle"></i> QMove
+        </div>
+        <ul class="navbar-menu">
+            <li><a th:href="@{/home}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a th:href="@{/setores}"><i class="fas fa-map-marker-alt"></i> Setores</a></li>
+            <li><a th:href="@{/motos}"><i class="fas fa-motorcycle"></i> Motos</a></li>
+            <li><a th:href="@{/funcionarios}"><i class="fas fa-users"></i> Funcionários</a></li>
+            <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </div>
+</nav>

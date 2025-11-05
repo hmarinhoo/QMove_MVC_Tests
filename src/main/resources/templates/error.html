@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Erro - QMove</title>
+    <div th:replace="fragments/header :: header"></div>
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .error-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .error-code {
+            font-size: 72px;
+            font-weight: bold;
+            color: #52764B;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .error-description {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="container">
+        <div class="card error-container">
+            <div class="error-icon"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></div>
+            <div class="error-code" th:text="${status}">Erro</div>
+            <div class="error-message">Algo deu errado!</div>
+            <div class="error-description">
+                <p>Desculpe, ocorreu um erro inesperado.</p>
+                <p th:if="${message}" th:text="${message}">Mensagem de erro</p>
+                <p>Nossa equipe foi notificada e estamos trabalhando para resolver o problema.</p>
+            </div>
+            <div class="error-actions">
+                <a th:href="@{/home}" class="btn"><i class="fas fa-home"></i> Voltar para Home</a>
+                <a href="javascript:history.back()" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

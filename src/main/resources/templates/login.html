@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - QMove</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #52764B 0%, #3d5838 100%);
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h2 {
+            color: #52764B;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #52764B;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #52764B;
+            box-shadow: 0 0 0 3px rgba(82, 118, 75, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #52764B 0%, #3d5838 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(82, 118, 75, 0.4);
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .alert-error {
+            background-color: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background-color: #efe;
+            color: #0a0;
+            border: 1px solid #cfc;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">        <div class="logo">
+            <h2><i class="fas fa-motorcycle"></i> QMove</h2>
+            <p>Sistema de Gerenciamento</p>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-error">
+            <i class="fas fa-times-circle"></i> Usuário ou senha inválidos.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> Logout realizado com sucesso.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> E-mail</label>
+                <input type="text" name="username" placeholder="Digite seu e-mail" required />
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Senha</label>
+                <input type="password" name="password" placeholder="Digite sua senha" required />
+            </div>
+            <button type="submit"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        </form>
+    </div>
+</body>
+</html>
+</body>
+</html>

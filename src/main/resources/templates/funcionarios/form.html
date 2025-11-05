@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Funcionário - QMove</title>
+    <div th:replace="fragments/header :: header"></div>
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-user-edit"></i> Cadastro de Funcionário</h2>
+            
+            <form th:action="@{/funcionarios/salvar}" method="post" th:object="${funcionario}">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-group">
+                    <label>Nome:</label>
+                    <input type="text" th:field="*{nome}" placeholder="Digite o nome completo">
+                    <small th:if="${#fields.hasErrors('nome')}" 
+                           th:errors="*{nome}" 
+                           class="error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" th:field="*{email}" placeholder="Digite o e-mail">
+                    <small th:if="${#fields.hasErrors('email')}" 
+                           th:errors="*{email}" 
+                           class="error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label>Senha:</label>
+                    <input type="password" th:field="*{senha}" placeholder="Digite a senha">
+                    <small th:if="${#fields.hasErrors('senha')}" 
+                           th:errors="*{senha}" 
+                           class="error"></small>
+                </div>                <div class="form-group">
+                    <label>Permissões (Roles):</label>
+                    <div th:each="role : ${roles}" style="margin: 8px 0;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" th:field="*{roles}" th:value="${role.id}" style="cursor: pointer;">
+                            <span th:text="${role.nome}"></span>
+                        </label>
+                    </div>                    <small style="color: #666; font-size: 14px;">
+                        <i class="fas fa-info-circle"></i> ROLE_ADMIN: Acesso total | ROLE_USER: Acesso a Motos e Setores
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" th:field="*{ativo}">
+                        <span>Ativo</span>
+                    </label>
+                </div>                <div class="actions">
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Salvar</button>
+                    <a th:href="@{/funcionarios}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

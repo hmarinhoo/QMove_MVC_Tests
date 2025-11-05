@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Setores - QMove</title>
+    <div th:replace="fragments/header :: header"></div>
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>    <div class="container">
+        <div class="card">
+            <div th:if="${success}" style="margin-bottom:12px;">
+                <div class="card" style="background:#d4edda;color:#155724;padding:12px;border-radius:8px;"> 
+                    <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+                </div>
+            </div>
+            <div th:if="${error}" style="margin-bottom:12px;">
+                <div class="card" style="background:#f8d7da;color:#721c24;padding:12px;border-radius:8px;"> 
+                    <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+                </div>
+            </div>
+            <h2><i class="fas fa-map-marker-alt"></i> Gerenciamento de Setores</h2>
+            <div style="margin: 20px 0;">
+                <a th:if="${currentUserRoles != null and #lists.contains(currentUserRoles,'ADMIN')}" th:href="@{/setores/novo}" class="btn"><i class="fas fa-plus-circle"></i> Novo Setor</a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Código</th>
+                        <th>Qtd Motos</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${setores}">
+                        <td th:text="${s.id}"></td>
+                        <td th:text="${s.nome}"></td>
+                        <td th:text="${s.codigo}"></td>
+                        <td th:text="${setorCounts[s.id]}" style="font-weight:700;"></td>
+                        <td style="text-align: center;">
+                            <a th:if="${currentUserRoles != null and #lists.contains(currentUserRoles,'ADMIN')}" th:href="@{|/setores/editar/${s.id}|}" class="btn btn-sm"><i class="fas fa-edit"></i> Editar</a>
+                            <a th:if="${currentUserRoles != null and #lists.contains(currentUserRoles,'ADMIN')}" th:href="@{|/setores/excluir/${s.id}|}" class="btn btn-sm btn-danger" 
+                               onclick="return confirm('Tem certeza que deseja excluir este setor?')"><i class="fas fa-trash"></i> Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
