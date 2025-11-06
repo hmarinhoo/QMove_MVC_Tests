@@ -7,55 +7,81 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-/**
- * Teste de login usando Selenium WebDriver.
- * Nota: a aplicação deve estar rodando em http://localhost:8080 antes de executar este teste.
- */
 public class CT01Login {
 
-    // Cenário 1: Login com Senha e Usuário Válidos
+    private static final String BASE_URL = "http://localhost:8080";
+
+    // Cenário de teste: Login válido
     @Test
     public void testeLoginValido() {
-        // Configura chromedriver automaticamente
+
         WebDriverManager.chromedriver().setup();
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-
-        WebDriver driver = new ChromeDriver(options);
+        WebDriver driver = new ChromeDriver();
         try {
             // Dado que o usuário está na página de login
-            driver.get("http://localhost:8080/login");
+            driver.get(BASE_URL + "/login");
 
-            // Seletores do template login.html (name="username" e name="password")
+            // Quando ele insere credenciais válidas
             WebElement emailInput = driver.findElement(By.name("username"));
             WebElement passwordInput = driver.findElement(By.name("password"));
-
-            // Credenciais das migrations
             emailInput.sendKeys("admin@mottu.com");
             passwordInput.sendKeys("admin123");
-
-            // Submete o formulário
             passwordInput.submit();
 
-            // Então o usuário deve ser redirecionado para a página home
+            // Então ele deve ser redirecionado para a página home
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            boolean leftLogin = wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+            boolean leftLogin = wait.until(ExpectedConditions.not(
+                    ExpectedConditions.urlContains("/login")
+            ));
             Assertions.assertTrue(leftLogin, "Deveria sair da página de login após autenticar");
 
-            // E a página home deve exibir o título correto
+            // E o título da página deve ser o esperado (pagina home)
             String pageTitle = driver.getTitle();
             Assertions.assertEquals("QMove - Home", pageTitle);
+
         } finally {
             driver.quit();
         }
     }
-}
+
+       // Cenário: Usuário válido e Senha Inválida
+        @Test
+        public void testeLoginSenhaInvalida() {
+            WebDriverManager.chromedriver().setup();
+            WebDriver driver = new ChromeDriver();
+            try {
+                // Dado que o usuário está na página de login
+                driver.get(BASE_URL + "/login");
+
+                // Quando ele insere um usuário válido, mas senha inválida
+                WebElement emailInput = driver.findElement(By.name("username"));
+                WebElement passwordInput = driver.findElement(By.name("password"));
+                emailInput.sendKeys("admin@mottu.com");
+                passwordInput.sendKeys("Erro123");
+                passwordInput.submit();
+
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+                // Então ele deve permanecer na página de login
+                wait.until(ExpectedConditions.urlContains("/login"));
+                Assertions.assertTrue(driver.getCurrentUrl().contains("/login"),
+                        "Deveria permanecer na página de login com senha inválida");
+                // E deve ser exibida a mensagem de erro correta
+                WebElement mensagemErro = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.cssSelector(".alert.alert-error")
+                ));
+                Assertions.assertEquals("Usuário ou senha inválidos.", mensagemErro.getText().trim(),
+                        "Mensagem de erro exibida está incorreta");
+
+            } finally {
+                driver.quit();
+            }
+        }
+
+    }
+
