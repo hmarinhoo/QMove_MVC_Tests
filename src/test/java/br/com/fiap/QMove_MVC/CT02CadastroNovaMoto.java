@@ -2,7 +2,6 @@ package br.com.fiap.QMove_MVC;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
@@ -50,8 +49,7 @@ public class CT02CadastroNovaMoto {
         }
     }
 
-    // Cenário de teste: Tentativa com campos vazios
-   // Cenário de teste: Cadastro de moto com campos obrigatórios vazios
+    // Cenário de teste: Cadastro de moto com campos obrigatórios vazios
     @Test
     public void camposVaziosTestCompleto() {
         WebDriver driver = new ChromeDriver();
@@ -64,11 +62,11 @@ public class CT02CadastroNovaMoto {
             WebElement botaoSalvar = driver.findElement(By.cssSelector("button[type='submit'].btn"));
             botaoSalvar.click();
 
-            // Entao verifica que o formulário não foi enviado, permanecendo na mesma página
+            // Então o sistema verifica que o formulário não foi enviado, permanecendo na mesma página
             assert driver.getCurrentUrl().equals(BASE_URL + "/motos/novo") :
                     "O formulário não deveria ser enviado com campos vazios.";
 
-            // Validando os campos e suas mensagens de erro
+            // E valida os campos com suas mensagens de erro
             WebElement placaInput = driver.findElement(By.id("placa"));
             WebElement modeloInput = driver.findElement(By.id("modelo"));
             WebElement statusSelect = driver.findElement(By.id("status"));
@@ -89,15 +87,14 @@ public class CT02CadastroNovaMoto {
         }
     }
 
-
-    // Cenário com Moto já existente
+    // Cenário de teste: Cadastro de moto com placa já existente
     @Test
     public void cadastroMotoJaExistente() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
         try {
-            //DADO
+            // Dado que o usuário está logado e acessa a página de cadastro de moto
             LoginAuxiliar.realizarLogin(driver);
             driver.get(BASE_URL +"/motos/novo");
 
@@ -107,17 +104,17 @@ public class CT02CadastroNovaMoto {
             WebElement statusSelectElement = driver.findElement(By.id("status"));
             WebElement setorSelectElement = driver.findElement(By.id("setor.id"));
 
-            // ⚠️ Usa uma placa que já existe no banco
+            // E que a placa da moto já existe no banco
             placaInput.sendKeys("XYZ1234");
             modeloInput.sendKeys("Mottu-E");
             new Select(statusSelectElement).selectByVisibleText("Em Uso");
             new Select(setorSelectElement).selectByVisibleText("Disponível - Verde");
 
-            // Quando clica em salvar
+            // Quando ele clica em salvar
             WebElement botaoSalvar = driver.findElement(By.xpath("//button[contains(., 'Salvar')]"));
             botaoSalvar.click();
 
-            // Então deve permanecer na URL /motos/salvar e exibir mensagem de erro 500
+            // Então deve permanecer na URL /motos/salvar e exibir mensagem de erro 
             wait.until(ExpectedConditions.urlContains("/motos/salvar"));
 
             String pageSource = driver.getPageSource();

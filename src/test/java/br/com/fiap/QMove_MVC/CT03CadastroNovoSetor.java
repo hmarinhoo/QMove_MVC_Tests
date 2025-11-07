@@ -23,21 +23,24 @@ public class CT03CadastroNovoSetor {
         WebDriver driver = new ChromeDriver();
 
         try {
+            // Dado que o usuário está logado
             LoginAuxiliar.realizarLogin(driver);
 
-            // Agora o usuário já está logado — pode acessar o cadastro
+            // E que ele está na página de cadastro de setor
             driver.get(BASE_URL + "/setores/novo");
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
             WebElement nomeInput = driver.findElement(By.id("nome"));
             WebElement codigoInput = driver.findElement(By.id("codigo"));
 
+            // Quando o usuário preenche os campos corretamente
             nomeInput.sendKeys("Teste");
             codigoInput.sendKeys("Rosa");
 
+            // E clica em salvar
             driver.findElement(By.cssSelector("button[type='submit'], .btn.btn-primary")).click();
 
+            // Então a página deve ser redirecionada para /setores, indicando sucesso no cadastro
             wait.until(ExpectedConditions.urlContains("/setores"));
             Assertions.assertTrue(driver.getCurrentUrl().contains("/setores"));
 
@@ -45,47 +48,48 @@ public class CT03CadastroNovoSetor {
             driver.quit();
         }
     }
+
+    // Cenário de teste: Tentativa de exclusão de setor com motos vinculadas
     @Test
     public void excluirSetorComMotosVinculadas() {
-    WebDriverManager.chromedriver().setup();
-    WebDriver driver = new ChromeDriver();
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
 
-    try {
-        LoginAuxiliar.realizarLogin(driver);
-        // Dado que o usuário está na página de listagem de setores
+        try {
+            // Dado que o usuário está logado e na página de listagem de setores
+            LoginAuxiliar.realizarLogin(driver);
             driver.get(BASE_URL + "/setores");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        // Quando tenta excluir um setor que possui motos vinculadas
-        // (supondo que o botão de excluir tenha um ícone de lixeira ou classe "btn-danger")
-        WebElement linkExcluir = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//a[contains(., 'Excluir') and contains(@class, 'btn-danger')]")
-        ));
-        linkExcluir.click();
+            // Quando tenta excluir um setor que possui motos vinculadas
+            WebElement linkExcluir = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//a[contains(., 'Excluir') and contains(@class, 'btn-danger')]")
+            ));
+            linkExcluir.click();
 
-        // Se aparecer um alerta (popup JS confirmando exclusão), confirma
-        try {
-            driver.switchTo().alert().accept();
-        } catch (Exception e) {
-            // se não tiver alerta, ignora
+            // E confirma o alerta de exclusão, se houver
+            try {
+                driver.switchTo().alert().accept();
+            } catch (Exception e) {
+                // E se não tiver alerta, ignora
+            }
+
+            // Então deve aparecer a mensagem de erro na página
+            wait.until(ExpectedConditions.textToBePresentInElementLocated(
+                    By.tagName("body"),
+                    "Não é possível excluir este setor"
+            ));
+
+            String pageSource = driver.getPageSource();
+            Assertions.assertTrue(
+                    pageSource.contains("Não é possível excluir este setor porque existem motos vinculadas a ele."),
+                    "Deveria exibir mensagem informando que o setor não pode ser excluído devido a motos vinculadas."
+            );
+
+        } finally {
+            driver.quit();}
         }
-
-        // Então deve aparecer a mensagem de erro na página
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.tagName("body"),
-                "Não é possível excluir este setor"
-        ));
-
-        String pageSource = driver.getPageSource();
-        Assertions.assertTrue(
-                pageSource.contains("Não é possível excluir este setor porque existem motos vinculadas a ele."),
-                "Deveria exibir mensagem informando que o setor não pode ser excluído devido a motos vinculadas."
-        );
-
-    } finally {
-        driver.quit();}
     }
-}
 
 

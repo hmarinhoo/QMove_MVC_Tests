@@ -49,7 +49,8 @@ public class CT01Login {
         }
     }
 
-       // Cenário: Usuário válido e Senha Inválida
+       // Cenário de teste: Usuário válido e Senha Inválida
+       // Validando um erro
         @Test
         public void testeLoginSenhaInvalida() {
             WebDriverManager.chromedriver().setup();

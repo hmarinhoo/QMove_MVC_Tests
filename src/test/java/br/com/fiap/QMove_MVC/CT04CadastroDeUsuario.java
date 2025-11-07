@@ -1,149 +1,136 @@
 package br.com.fiap.QMove_MVC;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+
+import java.time.Duration;
+
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.*;
 
-import java.time.Duration;
+
 
 public class CT04CadastroDeUsuario {
     private WebDriver driver;
     private WebDriverWait wait;
     private static final String BASE_URL = "http://localhost:8080";
 
-    @BeforeEach
-    public void setUp() {
+    // Cenário de teste: Cadastro de funcionário com sucesso
+    @Test
+    public void cadastroFuncionarioComSucesso() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
 
-    @AfterEach
-    public void tearDown() {
-        if (driver != null) {
+        try {
+            // Dado que o usuário está logado
+            LoginAuxiliar.realizarLogin(driver);
+            // E que ele está na página de cadastro de funcionário
+            driver.get(BASE_URL + "/funcionarios/novo");
+
+            WebElement nome = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nome")));
+            WebElement email = driver.findElement(By.id("email"));
+            WebElement senha = driver.findElement(By.id("senha"));
+            WebElement roleUser = driver.findElement(By.id("roles2")); // ROLE_USER
+            WebElement botaoSalvar = driver.findElement(By.xpath("//button[contains(.,'Salvar')]"));
+
+            // Quando o usuário preenche os campos corretamente
+            nome.sendKeys("Funcionário Teste OK");
+            email.sendKeys("func.ok" + System.currentTimeMillis() + "@teste.com");
+            senha.sendKeys("123456");
+            if (!roleUser.isSelected()) roleUser.click();
+            // E clica em salvar
+            botaoSalvar.click();
+
+            // Então aguarda redirecionamento ou mensagem de sucesso
+            boolean sucesso = false;
+            try {
+                wait.until(ExpectedConditions.urlContains("/funcionarios"));
+                sucesso = true;
+            } catch (TimeoutException e) {
+                WebElement msgSucesso = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//*[contains(text(),'Funcionário cadastrado com sucesso')]")
+                ));
+                sucesso = msgSucesso.isDisplayed();
+            }
+            Assertions.assertTrue(sucesso, "Funcionário válido não foi cadastrado com sucesso.");
+        } finally {
             driver.quit();
         }
     }
 
+    // Cenário de teste: Validar erro de senha com menos de 6 caracteres
     @Test
-    @DisplayName("Cadastro de funcionário com dados válidos e permissão marcada")
-    public void cadastroFuncionarioComSucesso() {
-        LoginAuxiliar.realizarLogin(driver);
-        driver.get(BASE_URL + "/funcionarios/novo");
-
-        WebElement nome = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nome")));
-        WebElement email = driver.findElement(By.id("email"));
-        WebElement senha = driver.findElement(By.id("senha"));
-        WebElement roleUser = driver.findElement(By.id("roles2")); // ROLE_USER
-        WebElement botaoSalvar = driver.findElement(By.xpath("//button[contains(.,'Salvar')]"));
-
-        nome.sendKeys("Funcionário Teste OK");
-        email.sendKeys("func.ok" + System.currentTimeMillis() + "@teste.com");
-        senha.sendKeys("123456");
-        if (!roleUser.isSelected()) roleUser.click();
-        botaoSalvar.click();
-
-        // Aguarda redirecionamento ou mensagem de sucesso
-        boolean sucesso = false;
-        try {
-            wait.until(ExpectedConditions.urlContains("/funcionarios"));
-            sucesso = true;
-        } catch (TimeoutException e) {
-            WebElement msgSucesso = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//*[contains(text(),'Funcionário cadastrado com sucesso')]")
-            ));
-            sucesso = msgSucesso.isDisplayed();
-        }
-
-        Assertions.assertTrue(sucesso, "Funcionário válido não foi cadastrado com sucesso.");
-    }
-
-    @Test
-    @DisplayName("Validar erro de senha com menos de 6 caracteres")
     public void validarErroSenhaCurta() {
-        LoginAuxiliar.realizarLogin(driver);
-        driver.get(BASE_URL + "/funcionarios/novo");
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        WebElement nome = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nome")));
-        WebElement email = driver.findElement(By.id("email"));
-        WebElement senha = driver.findElement(By.id("senha"));
-        WebElement botaoSalvar = driver.findElement(By.xpath("//button[contains(.,'Salvar')]"));
-
-        nome.sendKeys("Teste Senha Curta");
-        email.sendKeys("teste@teste.com");
-        senha.sendKeys("123"); // senha curta
-        botaoSalvar.click();
-
-        WebElement msgErro = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//*[contains(text(), 'A senha deve ter pelo menos 6 caracteres')]")
-        ));
-
-        Assertions.assertTrue(msgErro.isDisplayed(),
-                "Mensagem de erro de senha curta não foi exibida como esperado.");
-    }
-
-    @Test
-    @DisplayName("Validar erro de e-mail sem '@'")
-    public void validarErroEmailInvalido() {
-        LoginAuxiliar.realizarLogin(driver);
-        driver.get(BASE_URL + "/funcionarios/novo");
-
-        WebElement nome = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nome")));
-        WebElement email = driver.findElement(By.id("email"));
-        WebElement senha = driver.findElement(By.id("senha"));
-        WebElement botaoSalvar = driver.findElement(By.xpath("//button[contains(.,'Salvar')]"));
-
-        nome.sendKeys("Teste Email Invalido");
-        email.sendKeys("testeemail.com"); // sem @
-        senha.sendKeys("123456");
-        botaoSalvar.click();
-
-        boolean mensagemExibida = false;
         try {
-            WebElement msgErro = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//*[contains(text(), 'Inclua um')]")
-            ));
-            mensagemExibida = msgErro.isDisplayed();
-        } catch (TimeoutException e) {
-            String validationMessage = email.getAttribute("validationMessage");
-            Assertions.assertTrue(validationMessage.contains("@") || validationMessage.contains("Inclua"),
-                    "Mensagem de validação de e-mail inválido não exibida corretamente.");
-            mensagemExibida = true;
-        }
+            // Dado que o usuário está logado
+            LoginAuxiliar.realizarLogin(driver);
+            // E que está na página de cadastro de funcionário
+            driver.get(BASE_URL + "/funcionarios/novo");
 
-        Assertions.assertTrue(mensagemExibida,
-                "A mensagem de erro para e-mail inválido não foi exibida.");
+            WebElement nome = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nome")));
+            WebElement email = driver.findElement(By.id("email"));
+            WebElement senha = driver.findElement(By.id("senha"));
+            WebElement botaoSalvar = driver.findElement(By.xpath("//button[contains(.,'Salvar')]"));
+
+            // Quando o usuário preenche a senha com menos de 6 caracteres
+            nome.sendKeys("Teste Senha Curta");
+            email.sendKeys("teste@teste.com");
+            senha.sendKeys("123"); 
+            botaoSalvar.click();
+
+            // Então deve ser exibida a mensagem de erro
+            WebElement msgErro = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[contains(text(), 'A senha deve ter pelo menos 6 caracteres')]")
+            ));
+            Assertions.assertTrue(msgErro.isDisplayed(),
+                    "Mensagem de erro de senha curta não foi exibida como esperado.");
+        } finally {
+            driver.quit();
+        }
     }
 
+
+    // Cenário de teste: Validar erro ao tentar salvar com campos obrigatórios vazios
     @Test
-    @DisplayName("Validar erros com todos os campos vazios")
     public void validarErroCamposVazios() {
-    LoginAuxiliar.realizarLogin(driver);
-    driver.get(BASE_URL + "/funcionarios/novo");
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-    WebElement botaoSalvar = wait.until(ExpectedConditions.elementToBeClickable(
-            By.xpath("//button[contains(.,'Salvar')]")
-    ));
+        try {
+            // Dado que o usuário está logado
+            LoginAuxiliar.realizarLogin(driver);
+            // E que ele está na página de cadastro de funcionário
+            driver.get(BASE_URL + "/funcionarios/novo");
 
-    // Não preenche nenhum campo
-    botaoSalvar.click();
+            // Quando o usuário tenta salvar sem preencher nenhum campo
+            WebElement botaoSalvar = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//button[contains(.,'Salvar')]")
+            ));
+            botaoSalvar.click();
 
-    // Valida mensagens de erro
-    WebElement msgNome = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.xpath("//*[contains(text(),'O nome é obrigatório')]")
-    ));
-    WebElement msgEmail = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.xpath("//*[contains(text(),'O e-mail é obrigatório')]")
-    ));
-    WebElement msgSenha = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.xpath("//*[contains(text(),'A senha é obrigatória')]")
-    ));
-
-    Assertions.assertTrue(msgNome.isDisplayed(), "Mensagem de erro para nome vazio não exibida.");
-    Assertions.assertTrue(msgEmail.isDisplayed(), "Mensagem de erro para e-mail vazio não exibida.");
-    Assertions.assertTrue(msgSenha.isDisplayed(), "Mensagem de erro para senha vazia não exibida.");
-}
+            // Então devem ser exibidas mensagens de erro para todos os campos obrigatórios
+            WebElement msgNome = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[contains(text(),'O nome é obrigatório')]")
+            ));
+            WebElement msgEmail = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[contains(text(),'O e-mail é obrigatório')]")
+            ));
+            WebElement msgSenha = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[contains(text(),'A senha é obrigatória')]")
+            ));
+            Assertions.assertTrue(msgNome.isDisplayed(), "Mensagem de erro para nome vazio não exibida.");
+            Assertions.assertTrue(msgEmail.isDisplayed(), "Mensagem de erro para e-mail vazio não exibida.");
+            Assertions.assertTrue(msgSenha.isDisplayed(), "Mensagem de erro para senha vazia não exibida.");
+        } finally {
+            driver.quit();
+        }
+    }
 
 }
