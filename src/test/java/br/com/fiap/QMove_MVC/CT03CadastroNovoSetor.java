@@ -16,14 +16,14 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class CT03CadastroNovoSetor {
     private static final String BASE_URL = "http://localhost:8080";
 
-    // Cenário de teste: Cadastro de novo setor com sucesso
+    // Cenário de teste 1: Cadastro de novo setor com sucesso
     @Test
     public void cadastroComSucesso() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
         try {
-            // Dado que o usuário está logado
+            // Dado que o usuário está logado no perfil de administrador
             LoginAuxiliar.realizarLogin(driver);
 
             // E que ele está na página de cadastro de setor
@@ -49,7 +49,7 @@ public class CT03CadastroNovoSetor {
         }
     }
 
-    // Cenário de teste: Tentativa de exclusão de setor com motos vinculadas
+    // Cenário de teste 2: Tentativa de exclusão de setor com motos vinculadas
     @Test
     public void excluirSetorComMotosVinculadas() {
         WebDriverManager.chromedriver().setup();

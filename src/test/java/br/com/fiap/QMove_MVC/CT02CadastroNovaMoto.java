@@ -14,7 +14,7 @@ public class CT02CadastroNovaMoto {
 
     private static final String BASE_URL = "http://localhost:8080";
 
-    // Cenário de teste: Cadastro de nova moto com sucesso
+    // Cenário de teste 1: Cadastro de nova moto com sucesso
     @Test
     public void cadastroComSucesso() {
         WebDriverManager.chromedriver().setup();
@@ -49,9 +49,9 @@ public class CT02CadastroNovaMoto {
         }
     }
 
-    // Cenário de teste: Cadastro de moto com campos obrigatórios vazios
+    // Cenário de teste 2: Cadastro de moto com campos obrigatórios vazios
     @Test
-    public void camposVaziosTestCompleto() {
+    public void camposVazios() {
         WebDriver driver = new ChromeDriver();
         try {
             // Dado que o usuário está logado e acessa a página de cadastro de moto
@@ -87,7 +87,7 @@ public class CT02CadastroNovaMoto {
         }
     }
 
-    // Cenário de teste: Cadastro de moto com placa já existente
+    // Cenário de teste 3: Cadastro de moto com placa já existente
     @Test
     public void cadastroMotoJaExistente() {
         WebDriverManager.chromedriver().setup();

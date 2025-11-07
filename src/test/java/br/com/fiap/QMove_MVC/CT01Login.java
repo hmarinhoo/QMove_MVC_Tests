@@ -16,7 +16,7 @@ public class CT01Login {
 
     private static final String BASE_URL = "http://localhost:8080";
 
-    // Cenário de teste: Login válido
+    // Cenário de teste 1: Usuário e senha válidos
     @Test
     public void testeLoginValido() {
 
@@ -26,7 +26,7 @@ public class CT01Login {
             // Dado que o usuário está na página de login
             driver.get(BASE_URL + "/login");
 
-            // Quando ele insere credenciais válidas
+            // Quando ele insere credenciais válidas e clica em entrar
             WebElement emailInput = driver.findElement(By.name("username"));
             WebElement passwordInput = driver.findElement(By.name("password"));
             emailInput.sendKeys("admin@mottu.com");
@@ -49,7 +49,7 @@ public class CT01Login {
         }
     }
 
-       // Cenário de teste: Usuário válido e Senha Inválida
+       // Cenário de teste 2: Usuário válido e Senha Inválida
        // Validando um erro
         @Test
         public void testeLoginSenhaInvalida() {
@@ -64,6 +64,7 @@ public class CT01Login {
                 WebElement passwordInput = driver.findElement(By.name("password"));
                 emailInput.sendKeys("admin@mottu.com");
                 passwordInput.sendKeys("Erro123");
+                // E clica em entrar
                 passwordInput.submit();
 
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));

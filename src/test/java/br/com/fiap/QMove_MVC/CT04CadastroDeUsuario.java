@@ -16,7 +16,7 @@ public class CT04CadastroDeUsuario {
     private WebDriverWait wait;
     private static final String BASE_URL = "http://localhost:8080";
 
-    // Cenário de teste: Cadastro de funcionário com sucesso
+    // Cenário de teste 1: Cadastro de funcionário com sucesso
     @Test
     public void cadastroFuncionarioComSucesso() {
         WebDriverManager.chromedriver().setup();
@@ -24,7 +24,7 @@ public class CT04CadastroDeUsuario {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         try {
-            // Dado que o usuário está logado
+            // Dado que o usuário está logado no perfil de administrador
             LoginAuxiliar.realizarLogin(driver);
             // E que ele está na página de cadastro de funcionário
             driver.get(BASE_URL + "/funcionarios/novo");
@@ -43,7 +43,7 @@ public class CT04CadastroDeUsuario {
             // E clica em salvar
             botaoSalvar.click();
 
-            // Então aguarda redirecionamento ou mensagem de sucesso
+            // Então aguarda redirecionamento para /funcionarios 
             boolean sucesso = false;
             try {
                 wait.until(ExpectedConditions.urlContains("/funcionarios"));
@@ -60,7 +60,7 @@ public class CT04CadastroDeUsuario {
         }
     }
 
-    // Cenário de teste: Validar erro de senha com menos de 6 caracteres
+    // Cenário de teste 2: Validar erro de senha com menos de 6 caracteres
     @Test
     public void validarErroSenhaCurta() {
         WebDriverManager.chromedriver().setup();
@@ -68,7 +68,7 @@ public class CT04CadastroDeUsuario {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         try {
-            // Dado que o usuário está logado
+            // Dado que o usuário está logado no perfil de administrador
             LoginAuxiliar.realizarLogin(driver);
             // E que está na página de cadastro de funcionário
             driver.get(BASE_URL + "/funcionarios/novo");
@@ -96,7 +96,7 @@ public class CT04CadastroDeUsuario {
     }
 
 
-    // Cenário de teste: Validar erro ao tentar salvar com campos obrigatórios vazios
+    // Cenário de teste 3: Validar erro ao tentar salvar com campos obrigatórios vazios
     @Test
     public void validarErroCamposVazios() {
         WebDriverManager.chromedriver().setup();
@@ -104,7 +104,7 @@ public class CT04CadastroDeUsuario {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         try {
-            // Dado que o usuário está logado
+            // Dado que o usuário está logado no perfil de administrador
             LoginAuxiliar.realizarLogin(driver);
             // E que ele está na página de cadastro de funcionário
             driver.get(BASE_URL + "/funcionarios/novo");
