@@ -4,6 +4,11 @@ O QMove é uma solução tecnológica desenvolvida para a Mottu, com o objetivo 
 
 A aplicação transforma um processo tradicionalmente manual em uma operação automatizada, segura e escalável, integrando backend em Java com Spring Boot, aplicativo móvel e tecnologia baseada em QR Code.
 
+## 🔗 Links do Projeto
+
+* **Vídeo de Apresentação (YouTube):** https://youtu.be/CG44sZo_gLY
+* **Organização do Projeto (Azure Boards):** https://dev.azure.com/RM559145/Sprint%204%20%E2%80%93%20QA
+
 ## 👥 Integrantes
 
 * Hellen Marinho Cordeiro – RM: 558841
@@ -31,7 +36,6 @@ Antes de executar a aplicação e os testes, certifique-se de ter instalado:
 ## 📂 Configuração do Projeto
 
 ### Clonar o repositório
-
 ```bash
 git clone https://github.com/hmarinhoo/QMove_MVC
 cd QMove_MVC
@@ -40,7 +44,6 @@ cd QMove_MVC
 ### Configuração do Banco de Dados
 
 A aplicação utiliza o Flyway para controle de versões do banco de dados. O PostgreSQL é utilizado como banco principal. Para criar e iniciar o contêiner do banco, execute:
-
 ```bash
 docker-compose up
 ```
@@ -63,19 +66,16 @@ No arquivo `src/main/resources/application.properties`, o Spring Security está 
 ## 🛠 Execução da Aplicação
 
 1. Inicie o banco de dados com Docker Compose:
-
 ```bash
 docker-compose up
 ```
 
 2. Execute a aplicação:
-
 ```bash
 ./mvnw spring-boot:run
 ```
 
 3. Acesse pelo navegador:
-
 ```
 http://localhost:8080
 ```
@@ -91,7 +91,6 @@ O principal foco deste trabalho é testar a aplicação com Selenium e JUnit, ga
 
 1. Inicialize o banco e a aplicação via Docker Compose.
 2. Execute os testes JUnit com Maven:
-
 ```bash
 ./mvnw test
 ```
